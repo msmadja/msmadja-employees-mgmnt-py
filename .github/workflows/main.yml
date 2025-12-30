@@ -1,0 +1,34 @@
+name: Employees Mgmnt CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: pip install uv
+
+    - name: Install dependencies
+      run: make install-deps
+
+    - name: Run tests
+      run: make test
+    
+    - name: Build Docker image
+      run: docker build -t employee-mgmnt:latest .

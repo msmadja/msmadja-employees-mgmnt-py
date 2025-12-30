@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, HTTPException, Query, Request, status
 from typing import Optional
 
-from core import api_exception_handler
+from core import (api_exception_handler, authorize)
 from manage_employees import service
 from manage_employees.types import (
     Employee,
@@ -78,7 +78,9 @@ def get_employee(employee_code: str) -> Optional[EmployeeResponseDto]:
 
 @router.post("/", response_model=CreateEmployeeResponseDto)
 @api_exception_handler(ERROR_MAPPER)
-def create_employee(body: CreateEmployeeRequestDto) -> CreateEmployeeResponseDto:
+@authorize()
+async def create_employee(body: CreateEmployeeRequestDto, request: Request) -> CreateEmployeeResponseDto:
+    print(f'''The request data is {request.state.correlation_id}''')
     employee = Employee(
         name=body.name,
         employee_code=body.employee_code,

@@ -5,4 +5,4 @@ serve:
 	uv run uvicorn main:app --reload
 
 test:
-	pytest
+	uv run pytest
